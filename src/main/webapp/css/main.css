@@ -1,0 +1,171 @@
+body {
+    font-family: Arial, Verdana, Helvetica, Tahoma, sans-serif;
+    font-size: 12px;
+}
+
+a {
+    color: #15428B;
+}
+
+a:link, a:visited {
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#headerDiv {
+    background: #37557f;
+}
+
+#headerDiv h1 {
+    font-size: 18px;
+    color: #fff;
+    font-weight: normal;
+    padding: 10px 10px;
+}
+
+table.header {
+    width: 100%;
+    height: 55px; /*background-color: #77A8D7;*/
+    background: #37557f; /* url( ../../images/bg-header.gif ) 0 0 repeat-x;*/
+}
+
+table.header .rightTD {
+    text-align: right;
+    padding-right: 20px;
+}
+
+table.header .rightTD a {
+    color: white;
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+table.header .rightTD a:hover {
+    color: white;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.panel-info {
+    margin: 15px;
+    padding: 15px;
+    border: 1px dotted #999;
+    color: #555;
+    font-size: 14px;
+    background: #f9f9f9;
+}
+
+.panel-info a {
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.panel-info td {
+    color: #555;
+    font-size: 14px;
+}
+
+#panel-info-div {
+    margin: 5px 5px 5px 5px;
+}
+
+#panel-info-div h2 {
+    font-size: 12px;
+    color: #555;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #C3D0DF;
+}
+
+.help-box {
+    margin: 2px;
+    padding: 5px;
+    color: #555;
+    font-size: 13px;
+    background: #dfe8f6;
+}
+
+/********************** Ext JS Components **************************/
+
+/* Notifications popup alerts */
+.x-notification .x-window-body {
+    margin: 0;
+    padding: 1em ! important;
+    width: auto ! important;
+}
+
+.x-notification .x-tool-close {
+    display: none
+}
+
+.x-notification.fixed .x-tool-close {
+    display: block
+}
+
+/******** ICONS ********/
+
+.ico-clock {
+    vertical-align: middle;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 3px;
+    margin-bottom: 2px;
+    background-image: url( "../images/clock.png" ) !important;
+}
+
+.ico-proc {
+    vertical-align: middle;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 3px;
+    margin-bottom: 2px;
+    background-image: url( "../images/process.png" ) !important;
+}
+
+.icon-n-info {
+    background-image: url( "../images/n-info.png" ) !important;
+}
+
+.icon-n-error {
+    background-image: url( "../images/n-error.png" ) !important;
+}
+
+.icon-n-hint {
+    background-image: url( "../images/n-suggest.png" ) !important;
+}
+
+.icon-n-warn {
+    background-image: url( "../images/n-warn.png" ) !important;
+}
+
+.icon-delete {
+    background-image: url( "../images/delete.png" ) !important;
+}
+
+.icon-ok {
+    background-image: url( "../images/ok.png" ) !important;
+}
+
+.panelTitle {
+    font-size: 14px;
+}
+
+.multiline-combo {
+    font: normal 13px Arial, Verdana, Helvetica, Tahoma, sans-serif;
+    padding: 4px 10px 4px 10px;
+    border: 1px solid #fff;
+    border-bottom: 1px solid #eeeeee;
+    white-space: normal;
+    color: #555;
+}
+
+table.panelTbl td {
+    font-size: 12px;
+}
+
+table.panelTbl td.label {
+    font-size: 12px;
+    font-weight: bold;
+}
