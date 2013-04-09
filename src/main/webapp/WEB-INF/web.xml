@@ -21,12 +21,10 @@
     <context-param>
         <param-name>maxevents</param-name>
         <param-value>1000</param-value>
-        <description>How many job execution events to keep in the queue.</description>
     </context-param>
     <context-param>
         <param-name>maxshowevents</param-name>
         <param-value>50</param-value>
-        <description>How many job execution events from the queue to show in the UI.</description>
     </context-param>
 
     <listener>

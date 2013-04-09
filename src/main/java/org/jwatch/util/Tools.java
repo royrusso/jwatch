@@ -20,6 +20,7 @@
 package org.jwatch.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,6 +33,8 @@ import java.util.UUID;
 public class Tools
 {
    public static final String DATE_FORMAT_DEFAULT = "MM/dd/yy HH:mm:ss z";
+
+   static Logger log = Logger.getLogger(Tools.class);
 
    public static String generateUUID()
    {
@@ -52,7 +55,7 @@ public class Tools
       }
       catch (Exception e)
       {
-         //
+          log.error(e);
       }
       return null;
    }

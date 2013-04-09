@@ -54,7 +54,7 @@ public class SettingsLoaderListener implements ServletContextListener
     {
         try
         {
-            log.info("Starting Settings Load...");
+            log.debug("Starting Settings Load...");
             long start = Calendar.getInstance().getTimeInMillis();
 
             ServletContext sc = event.getServletContext();
@@ -100,7 +100,7 @@ public class SettingsLoaderListener implements ServletContextListener
             connectionUtil.update(jwatchLog.toString());
 
             long end = Calendar.getInstance().getTimeInMillis();
-            log.info("Settings startup completed in: " + (end - start) + " ms");
+            log.debug("Settings startup completed in: " + (end - start) + " ms");
         }
         catch (Throwable t)
         {
@@ -110,7 +110,7 @@ public class SettingsLoaderListener implements ServletContextListener
 
     public void contextDestroyed(ServletContextEvent event)
     {
-        log.info("Shutting down SettingsLoaderListener service...");
+        log.debug("Shutting down SettingsLoaderListener service...");
         Map qMap = QuartzInstanceService.getQuartzInstanceMap();
         for (Iterator it = qMap.entrySet().iterator(); it.hasNext(); )
         {
@@ -144,7 +144,7 @@ public class SettingsLoaderListener implements ServletContextListener
             try
             {
                 DriverManager.deregisterDriver(driver);
-                log.info(String.format("deregistering jdbc driver: %s", driver));
+                log.debug(String.format("deregistering jdbc driver: %s", driver));
             }
             catch (SQLException e)
             {

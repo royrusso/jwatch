@@ -51,4 +51,32 @@ public class TriggerUtil
       }
       return theNext;
    }
+   
+   // johnk addtition
+   
+   public static String getTriggerStatusForJob(List<Trigger> triggers)
+   {
+      String triggerStatus = "NORMAL";
+      if (triggers != null && triggers.size() > 0)
+      {
+         for (int i = 0; i < triggers.size(); i++)
+         {
+            Trigger trigger = triggers.get(i);
+            if ("PAUSED".equalsIgnoreCase(trigger.getSTriggerState())) {
+            	triggerStatus = "PAUSED";
+            	break;
+            } else if ("COMPLETED".equalsIgnoreCase(trigger.getSTriggerState())) {
+                if ("NORMAL".equalsIgnoreCase(trigger.getSTriggerState())) {
+                	triggerStatus = "COMPLETED";
+                }
+            	continue;
+            }
+            if (!triggerStatus.equalsIgnoreCase(trigger.getSTriggerState())) {
+            	triggerStatus = trigger.getSTriggerState();
+            }
+         }
+      }
+      return triggerStatus;
+   }
+
 }

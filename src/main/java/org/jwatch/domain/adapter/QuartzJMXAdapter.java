@@ -26,6 +26,7 @@ import org.jwatch.domain.quartz.Trigger;
 
 import javax.management.ObjectName;
 import java.util.List;
+import java.util.Map;
 
 /**
  * TODO: implement this across other quartz versions.
@@ -58,4 +59,17 @@ public interface QuartzJMXAdapter
    List<Trigger> getTriggersForJob(QuartzInstance quartzInstance, String scheduleID, String jobName, String groupName) throws Exception;
 
    void attachListener(QuartzInstance quartzInstance, String scheduleID) throws Exception;
+
+   // johnk additions
+   void pauseJob(QuartzInstance quartzInstance, String scheduleID, String jobName, String groupName) throws Exception;
+
+   void resumeJob(QuartzInstance quartzInstance, String scheduleID, String jobName, String groupName) throws Exception;
+
+   // this really returns a boolean, but there is now structure to handle it
+   void deleteJob(QuartzInstance quartzInstance, String scheduleID, String jobName, String groupName) throws Exception;
+
+   // jobDataMap is really a JobDataMap, but we are always going to pass a null, so just use an Object
+//   void triggerJobWithVolatileTrigger(QuartzInstance quartzInstance, String scheduleID, String jobName, String groupName, Map jobDataMap) throws Exception;
+   void triggerJob(QuartzInstance quartzInstance, String scheduleID, String jobName, String groupName, Map jobDataMap) throws Exception;
+
 }

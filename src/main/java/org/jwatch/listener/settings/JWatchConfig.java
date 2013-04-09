@@ -29,6 +29,8 @@ public class JWatchConfig
     public static final String PROPS_FILE_NAME = "jwatch.properties";
     public static final String DB_FILE_PREFIX = "jwatchdb";
     public static final String QUARTZ_INSTANCE_FILE = "jwatch.json";
+    // johnk - directory for all jwatch files
+    public static final String QUARTZ_INSTANCE_DIR = "jwatch";
     private static boolean DBDebug = true;
     private static int maxShowEvents = 50;
 

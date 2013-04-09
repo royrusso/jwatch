@@ -79,7 +79,7 @@ addInstance = function() {
                                     res = Ext.util.JSON
                                             .decode(result.response.responseText);
                                     if (res.success == true) {
-                                        popAlert('TODO DESC', 'TODO',
+                                        popAlert('Configuration Change', 'Settings save successful',
                                                 'icon-n-info', 3000);
                                         addInstanceWin.hide();
                                         addInstancePanel.form.reset();

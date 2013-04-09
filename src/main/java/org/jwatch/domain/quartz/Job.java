@@ -44,6 +44,9 @@ public class Job
    private Map jobDataMap;
    private Date nextFireTime;
    private int numTriggers;
+   private String triggerStatus;
+   // johnk known trigger status values: WAITING, PAUSED, ACQUIRED, BLOCKED
+   // we add NONE if a trigger is not found for a job.
 
    public String getQuartzInstanceId()
    {
@@ -155,6 +158,16 @@ public class Job
       this.nextFireTime = nextFireTime;
    }
 
+   public String getTriggerStatus()
+   {
+      return triggerStatus;
+   }
+
+   public void setTriggerStatus(String triggerStatus)
+   {
+      this.triggerStatus = triggerStatus;
+   }
+
    @Override
    public String toString()
    {
@@ -171,6 +184,7 @@ public class Job
       sb.append(", jobDataMap=").append(jobDataMap);
       sb.append(", nextFireTime=").append(nextFireTime);
       sb.append(", numTriggers=").append(numTriggers);
+      sb.append(", triggerStatus=").append(triggerStatus);
       sb.append('}');
       return sb.toString();
    }

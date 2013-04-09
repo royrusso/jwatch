@@ -108,22 +108,27 @@ public class QuartzInstanceHandler
             int port = Integer.valueOf(StringUtils.trimToNull((String) map.get("port")));
             String username = StringUtils.trimToNull((String) map.get("userName"));
             String password = StringUtils.trimToNull((String) map.get("password"));
+            String deleteOption = StringUtils.trimToNull((String) map.get("delete"));
 
             if (StringUtils.trimToNull(host) != null)
             {
                 QuartzConfig quartzConfig = new QuartzConfig(Tools.generateUUID(), host, port, username, password);
-                QuartzConnectService quartzConnectService = new QuartzConnectServiceImpl();
-                QuartzInstance quartzInstance = quartzConnectService.initInstance(quartzConfig);
-                if (quartzInstance == null)
-                {
-                    log.error(GlobalConstants.MESSAGE_FAILED_CONNECT + " " + quartzConfig);
-                    jsonObject = JSONUtil.buildError(GlobalConstants.MESSAGE_FAILED_CONNECT + " " + quartzConfig);
-                    return jsonObject;
-                }
+                if ("true".equals(deleteOption)) {
+                	SettingsUtil.deleteConfig(quartzConfig);
+                } else {
+	                QuartzConnectService quartzConnectService = new QuartzConnectServiceImpl();
+	                QuartzInstance quartzInstance = quartzConnectService.initInstance(quartzConfig);
+	                if (quartzInstance == null)
+	                {
+	                    log.error(GlobalConstants.MESSAGE_FAILED_CONNECT + " " + quartzConfig);
+	                    jsonObject = JSONUtil.buildError(GlobalConstants.MESSAGE_FAILED_CONNECT + " " + quartzConfig);
+	                    return jsonObject;
+	                }
 
-                // persist
-                QuartzInstanceService.putQuartzInstance(quartzInstance);
-                SettingsUtil.saveConfig(quartzConfig);
+	                // persist
+	                QuartzInstanceService.putQuartzInstance(quartzInstance);
+	                SettingsUtil.saveConfig(quartzConfig);
+                }
                 jsonObject.put(GlobalConstants.JSON_DATA_ROOT_KEY, quartzConfig);
                 jsonObject.put(GlobalConstants.JSON_SUCCESS_KEY, true);
             }
@@ -211,10 +216,13 @@ public class QuartzInstanceHandler
                         for (int i = 0; i < jobs.size(); i++)
                         {
                             Job job = jobs.get(i);
-                            JSONObject o = JSONObject.fromObject(job);
-                            o.put("nextFireTime", Tools.toStringFromDate(job.getNextFireTime(), null));
-
-                            jsonArray.add(o);
+                            try {
+								JSONObject o = JSONObject.fromObject(job);
+								o.put("nextFireTime", job.getNextFireTime() == null ? "" : Tools.toStringFromDate(job.getNextFireTime(), null));
+								jsonArray.add(o);
+							} catch (Exception e) {
+								log.error("Error processing job = " + job.getJobName());
+							}
                         }
                     }
                 }
@@ -223,7 +231,7 @@ public class QuartzInstanceHandler
             jsonObject.put(GlobalConstants.JSON_DATA_ROOT_KEY, jsonArray);
             jsonObject.put(GlobalConstants.JSON_TOTAL_COUNT, totalCount);
         }
-        catch (Throwable t)
+        catch (Exception t)
         {
             log.error(t);
             jsonObject = JSONUtil.buildError(GlobalConstants.MESSAGE_ERR_LOAD_JOBS);
@@ -341,4 +349,90 @@ public class QuartzInstanceHandler
         }
         return jsonObject;
     }
+
+    // johnk additions - add control capabilities
+
+    public static JSONObject pauseJob(Map map) {
+        JSONObject jsonObject = new JSONObject();
+
+        String qiid = StringUtils.trimToNull((String) map.get("uuid"));
+        String jobName = StringUtils.trimToNull((String) map.get("jobName"));
+        String groupName = StringUtils.trimToNull((String) map.get("groupName"));
+        String scheduleID = StringUtils.trimToNull((String) map.get("sid"));
+        log.info("pause for job = " + jobName + " group = " + groupName);
+        try {
+            QuartzInstance quartzInstance = QuartzInstanceService.getQuartzInstanceByID(qiid);
+            quartzInstance.getJmxAdapter().pauseJob(quartzInstance, scheduleID, jobName, groupName);
+            jsonObject.put(GlobalConstants.JSON_SUCCESS_KEY, true);
+        } catch (Throwable t) {
+            log.error(t);
+            jsonObject = JSONUtil.buildError(GlobalConstants.MESSAGE_ERR_PAUSE_JOB);
+        }
+        return jsonObject;
+    }
+
+
+    public static JSONObject resumeJob(Map map) {
+        JSONObject jsonObject = new JSONObject();
+
+        String qiid = StringUtils.trimToNull((String) map.get("uuid"));
+        String jobName = StringUtils.trimToNull((String) map.get("jobName"));
+        String groupName = StringUtils.trimToNull((String) map.get("groupName"));
+        String scheduleID = StringUtils.trimToNull((String) map.get("sid"));
+        log.info("resume for job = " + jobName + " group = " + groupName);
+        try {
+            QuartzInstance quartzInstance = QuartzInstanceService.getQuartzInstanceByID(qiid);
+            quartzInstance.getJmxAdapter().resumeJob(quartzInstance, scheduleID, jobName, groupName);
+            jsonObject.put(GlobalConstants.JSON_SUCCESS_KEY, true);
+        } catch (Throwable t) {
+            log.error(t);
+            jsonObject = JSONUtil.buildError(GlobalConstants.MESSAGE_ERR_RESUME_JOB);
+        }
+        return jsonObject;
+    }
+
+    public static JSONObject deleteJob(Map map) {
+        JSONObject jsonObject = new JSONObject();
+
+        String qiid = StringUtils.trimToNull((String) map.get("uuid"));
+        String jobName = StringUtils.trimToNull((String) map.get("jobName"));
+        String groupName = StringUtils.trimToNull((String) map.get("groupName"));
+        String scheduleID = StringUtils.trimToNull((String) map.get("sid"));
+        log.info("delete for job = " + jobName + " group = " + groupName);
+        try {
+            QuartzInstance quartzInstance = QuartzInstanceService.getQuartzInstanceByID(qiid);
+            quartzInstance.getJmxAdapter().deleteJob(quartzInstance, scheduleID, jobName, groupName);
+            jsonObject.put(GlobalConstants.JSON_SUCCESS_KEY, true);
+        } catch (Throwable t) {
+            log.error(t);
+            jsonObject = JSONUtil.buildError(GlobalConstants.MESSAGE_ERR_DELETE_JOB);
+        }
+        return jsonObject;
+    }
+
+
+
+    public static JSONObject runJob(Map map) {
+        JSONObject jsonObject = new JSONObject();
+
+        String qiid = StringUtils.trimToNull((String) map.get("uuid"));
+        String jobName = StringUtils.trimToNull((String) map.get("jobName"));
+        String groupName = StringUtils.trimToNull((String) map.get("groupName"));
+        String scheduleID = StringUtils.trimToNull((String) map.get("sid"));
+        log.info("run now for job = " + jobName + " group = " + groupName);
+        try {
+            QuartzInstance quartzInstance = QuartzInstanceService.getQuartzInstanceByID(qiid);
+//            quartzInstance.getJmxAdapter().triggerJobWithVolatileTrigger(quartzInstance, scheduleID, jobName, groupName, null);
+            quartzInstance.getJmxAdapter().triggerJob(quartzInstance, scheduleID, jobName, groupName, null);
+            jsonObject.put(GlobalConstants.JSON_SUCCESS_KEY, true);
+        } catch (Throwable t) {
+            log.error(t);
+            jsonObject = JSONUtil.buildError(GlobalConstants.MESSAGE_ERR_RUN_JOB);
+        }
+        return jsonObject;
+    }
+
+
+
+
 }

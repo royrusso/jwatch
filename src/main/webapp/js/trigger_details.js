@@ -36,28 +36,35 @@ getTriggersForJob = function(qid, sid, jname, gname) {
 								id : 'previousFireTime',
 								header : "Prev FireTime",
 								width : 150,
-								css : "font-size : 13px;padding:3px;",
+								css : "font-size:13px;padding:3px;",
 								sortable : true,
-								dataIndex : 'previousFireTime'
+								dataIndex : 'previousFireTime',
+				                renderer : function(value, p, record)
+				                {
+				                    return Ext.util.Format.date(record.data.previousFireTime,'m/d/y H:i:s');
+				                }
 							}, {
 								id : 'nextFireTime',
 								header : "Next FireTime",
 								width : 150,
-								css : "font-size : 13px;padding:3px;color:green;",
+								css : "font-size:13px;padding:3px;",
 								sortable : true,
 								dataIndex : 'nextFireTime',
-								renderer : function(value, p, record) {
-									return '<font style="color:green;font-weight:bold;">'
-											+ record.data.nextFireTime
-											+ '</font>';
-								}
+				                renderer : function(value, p, record)
+				                {
+				                    return Ext.util.Format.date(record.data.nextFireTime,'m/d/y H:i:s');
+				                }
 							}, {
 								id : 'startTime',
 								header : "Started",
 								width : 150,
-								css : "font-size : 13px;padding:3px;",
+								css : "font-size:13px;padding:3px;",
 								sortable : true,
-								dataIndex : 'startTime'
+								dataIndex : 'startTime',
+					                renderer : function(value, p, record)
+					                {
+					                    return Ext.util.Format.date(record.data.startTime,'m/d/y H:i:s');
+					                }
 							}, {
 								id : 'STriggerState',
 								header : "State",

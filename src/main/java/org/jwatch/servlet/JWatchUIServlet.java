@@ -22,6 +22,7 @@ package org.jwatch.servlet;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jwatch.handler.QuartzInstanceHandler;
+import org.jwatch.util.GlobalConstants;
 import org.jwatch.util.JSONUtil;
 
 import javax.servlet.ServletConfig;
@@ -47,7 +48,7 @@ public class JWatchUIServlet extends HttpServlet
 
    public final void init(ServletConfig servletConfig) throws ServletException
    {
-      log.info("************ STARTED: JWatchUIServlet ******************");
+      log.debug("************ STARTED: JWatchUIServlet ******************");
    }
 
    public void doGet(HttpServletRequest req, HttpServletResponse res)
@@ -103,7 +104,30 @@ public class JWatchUIServlet extends HttpServlet
                Map map = JSONUtil.convertRequestToMap(req);
                returnO = QuartzInstanceHandler.getJobsList(map);
             }
+            //
+            // johnk additions - add control capabilities
+            //
+            else if (subject.equalsIgnoreCase(ActionConstants.PAUSE_JOB)) {
+               Map map = JSONUtil.convertRequestToMap(req);
+               returnO = QuartzInstanceHandler.pauseJob(map);
+            } else if (subject.equalsIgnoreCase(ActionConstants.RESUME_JOB)) {
+               Map map = JSONUtil.convertRequestToMap(req);
+               returnO = QuartzInstanceHandler.resumeJob(map);
+            } else if (subject.equalsIgnoreCase(ActionConstants.DELETE_JOB)) {
+               Map map = JSONUtil.convertRequestToMap(req);
+               returnO = QuartzInstanceHandler.deleteJob(map);
+            } else if (subject.equalsIgnoreCase(ActionConstants.RUN_JOB)) {
+                Map map = JSONUtil.convertRequestToMap(req);
+                returnO = QuartzInstanceHandler.runJob(map);
+             }
+            //
+            // end johnk additions - add control capabilities
+            //
 
+            else {
+            	JSONUtil.buildError(GlobalConstants.MESSAGE_ERR_ACTION_UNKNOWN);
+            	log.error(GlobalConstants.MESSAGE_ERR_ACTION_UNKNOWN);
+            }
             out.print(returnO);
             out.flush();
             out.close();

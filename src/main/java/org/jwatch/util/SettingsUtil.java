@@ -28,6 +28,7 @@ import org.jwatch.listener.settings.QuartzConfig;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -49,7 +50,7 @@ public class SettingsUtil
      */
     public static String getConfigPath()
     {
-        String userHome = (String) System.getProperties().get("user.home");
+        String userHome = getBasePath();
         String cfgFile = userHome + File.separator + JWatchConfig.QUARTZ_INSTANCE_FILE;
 
         File file = new File(cfgFile);
@@ -93,9 +94,9 @@ public class SettingsUtil
         }
     }
 
-    public static List loadConfig()
+    public static List<QuartzConfig> loadConfig()
     {
-        List instances = new ArrayList();
+        List<QuartzConfig> instances = new ArrayList<QuartzConfig>();
         String configPath = SettingsUtil.getConfigPath();
         InputStream inputStream = null;
         try
@@ -103,9 +104,9 @@ public class SettingsUtil
             File configFile = new File(configPath);
             if (!configFile.exists())
             {
-                log.info("Settings file not found! Creating new file at " + configPath);
+                log.debug("Settings file not found! Creating new file at " + configPath);
                 FileUtils.touch(configFile);
-                log.info("Settings file created at " + configPath);
+                log.debug("Settings file created at " + configPath);
             }
             else
             {
@@ -117,7 +118,7 @@ public class SettingsUtil
                 XStream xStream = new XStream(new JettisonMappedXmlDriver());
                 xStream.setMode(XStream.NO_REFERENCES);
                 xStream.alias(GlobalConstants.JSON_DATA_ROOT_KEY, ArrayList.class);
-                instances = ((List) xStream.fromXML(inputStream));
+                instances = ((List<QuartzConfig>) xStream.fromXML(inputStream));
             }
         }
         catch (Throwable t)
@@ -141,7 +142,7 @@ public class SettingsUtil
         return instances;
     }
 
-    public static void saveConfig(List<QuartzConfig> configs, String configFilePath)
+    private static void saveConfig(List<QuartzConfig> configs, String configFilePath)
     {
         FileOutputStream fileOutputStream = null;
         try
@@ -175,8 +176,30 @@ public class SettingsUtil
 
     public static void saveConfig(QuartzConfig quartzConfig)
     {
-        List instances = loadConfig();
+        List<QuartzConfig> instances = loadConfig();
+        // johnk 
+        // look at the current config data.  if there is already one for
+        // the host / port in the the new config, remove it from the list
+        for (Iterator<QuartzConfig> it = instances.iterator(); it.hasNext(); ) {
+            QuartzConfig savedQuartzConfig = it.next();
+            if (savedQuartzConfig.getUname().equalsIgnoreCase(quartzConfig.getUname())) {
+            	it.remove();
+            }
+        }
         instances.add(quartzConfig);
+        saveConfig(instances, getConfigPath());
+    }
+
+    // johnk - delete a quartzConfig from the configuration file
+    public static void deleteConfig(QuartzConfig quartzConfig)
+    {
+        List<QuartzConfig> instances = loadConfig();
+        for (Iterator<QuartzConfig> it = instances.iterator(); it.hasNext(); ) {
+            QuartzConfig savedQuartzConfig = it.next();
+            if (savedQuartzConfig.getUname().equalsIgnoreCase(quartzConfig.getUname())) {
+            	it.remove();
+            }
+        }
         saveConfig(instances, getConfigPath());
     }
 
@@ -187,10 +210,10 @@ public class SettingsUtil
      */
     public static String getDBFilePath()
     {
-        String userHome = (String) System.getProperties().get("user.home");
+        String userHome = getBasePath();
         String cfgFile = userHome + File.separator + JWatchConfig.DB_FILE_PREFIX;
 
-        File file = new File(cfgFile);
+//        File file = new File(cfgFile);
 
 /*        if (!file.canRead())
         {
@@ -206,10 +229,48 @@ public class SettingsUtil
 
     public static String getPropertiesPath()
     {
-        String userHome = (String) System.getProperties().get("user.home");
+        String userHome = getBasePath();
         String cfgFile = userHome + File.separator + JWatchConfig.PROPS_FILE_NAME;
 
-        File file = new File(cfgFile);
+//        File file = new File(cfgFile);
         return cfgFile;
     }
+    
+    
+    // johnk
+    // move all jwatch files to their own subdirectory
+    // if we cannot write files in 
+    public static String getBasePath() {
+    	String basedir = "/var/lo";
+    	String jwatchHome = getTestedBasePath(basedir);
+    	if (jwatchHome == null || jwatchHome.length() < 1) {
+    		basedir = (String) System.getProperties().get("user.home");
+        	jwatchHome = getTestedBasePath(basedir);
+    	}
+        log.debug("Using jWatch directory at: " + jwatchHome);
+        return jwatchHome;
+    }
+    
+    private static String getTestedBasePath(String defaultBase) {
+    	String userHome = System.getProperty("JWATCHDIR");
+    	if (userHome == null || userHome.length() < 1) {
+    		userHome = defaultBase;
+    	}
+    	String jwatchHome = userHome + File.separator + JWatchConfig.QUARTZ_INSTANCE_DIR;
+        File jwatchDirectory = new File(jwatchHome);
+        if (!jwatchDirectory.exists()) {
+        	boolean success = jwatchDirectory.mkdirs();
+            if (!success) {
+                log.error("Cannot create JWatch directory at: " + jwatchHome);
+                jwatchHome = "";
+            }
+         }
+        if (!jwatchDirectory.canRead() || !jwatchDirectory.canWrite()) {
+            log.error("Cannot read JWatch config at: " + jwatchDirectory.getAbsolutePath());
+            jwatchHome = "";
+        }
+
+        return jwatchHome;
+    }
+
 }

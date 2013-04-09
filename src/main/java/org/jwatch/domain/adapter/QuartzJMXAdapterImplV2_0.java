@@ -32,11 +32,17 @@ import org.jwatch.util.JMXUtil;
 
 import javax.management.*;
 import javax.management.openmbean.CompositeDataSupport;
+import javax.management.openmbean.CompositeType;
 import javax.management.openmbean.TabularDataSupport;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:royrusso@gmail.com">Roy Russo</a>
@@ -164,21 +170,23 @@ public class QuartzJMXAdapterImplV2_0 implements QuartzJMXAdapter
             job.setJobClass((String) JMXUtil.convertToType(compositeDataSupport, "jobClass"));
 
             // get Next Fire Time for job
-            List<Trigger> triggers = this.getTriggersForJob(quartzInstance, scheduleID, job.getJobName(), job.getGroup());
-            try
-            {
-               if (triggers != null && triggers.size() > 0)
-               {
-                  Date nextFireTime = TriggerUtil.getNextFireTimeForJob(triggers);
-                  job.setNextFireTime(nextFireTime);
-                  job.setNumTriggers(triggers.size());
-               }
-            }
-            catch (Throwable t)
-            {
-               log.error(t);
-            }
-
+			try {
+				List<Trigger> triggers = this.getTriggersForJob(quartzInstance, scheduleID, job.getJobName(), job.getGroup());
+				if (triggers != null && triggers.size() > 0) {
+					Date nextFireTime = TriggerUtil.getNextFireTimeForJob(triggers);
+					job.setNextFireTime(nextFireTime);
+					job.setNumTriggers(triggers.size());
+					job.setTriggerStatus(TriggerUtil.getTriggerStatusForJob(triggers));
+				} else {
+					job.setTriggerStatus("NONE");
+				}
+			} catch (Exception t) {
+				log.error("Cannot retrieve triggers for job = " + job.getJobName());
+				log.error(t.getMessage());
+				job.setNextFireTime(null);
+				job.setNumTriggers(0);
+				job.setTriggerStatus("BAD TRIGGER");
+			}
             log.debug("Loaded job: " + job);
             jobs.add(job);
          }
@@ -238,6 +246,7 @@ public class QuartzJMXAdapterImplV2_0 implements QuartzJMXAdapter
             catch (Throwable tt)
             {
                trigger.setSTriggerState(Trigger.STATE_GET_ERROR);
+               log.error("Error getting triggers for job = " + jobName);
             }
 
             triggers.add(trigger);
@@ -277,4 +286,74 @@ public class QuartzJMXAdapterImplV2_0 implements QuartzJMXAdapter
       MBeanServerConnection connection = quartzInstance.getMBeanServerConnection();
       return connection.invoke(jmxInput.getObjectName(), jmxInput.getOperation(), jmxInput.getParameters(), jmxInput.getSignature());
    }
+
+   // johnk additions and controls
+
+   @Override
+   public void pauseJob(QuartzInstance quartzInstance, String scheduleID, String jobName, String groupName) throws Exception
+   {
+      Scheduler scheduler = QuartzInstanceUtil.getSchedulerByInstanceId(quartzInstance, scheduleID);
+
+      JMXInput jmxInput = new JMXInput(quartzInstance, new String[]{String.class.getName(), String.class.getName()}, "pauseJob", new Object[]{jobName, groupName}, scheduler.getObjectName());
+      callJMXOperation(jmxInput);
+   }
+
+   @Override
+   public void resumeJob(QuartzInstance quartzInstance, String scheduleID, String jobName, String groupName) throws Exception
+   {
+      Scheduler scheduler = QuartzInstanceUtil.getSchedulerByInstanceId(quartzInstance, scheduleID);
+
+      JMXInput jmxInput = new JMXInput(quartzInstance, new String[]{String.class.getName(), String.class.getName()}, "resumeJob", new Object[]{jobName, groupName}, scheduler.getObjectName());
+      callJMXOperation(jmxInput);
+   }
+
+
+   @Override
+   public void deleteJob(QuartzInstance quartzInstance, String scheduleID, String jobName, String groupName) throws Exception
+   {
+      Scheduler scheduler = QuartzInstanceUtil.getSchedulerByInstanceId(quartzInstance, scheduleID);
+
+      JMXInput jmxInput = new JMXInput(quartzInstance, new String[]{String.class.getName(), String.class.getName()}, "deleteJob", new Object[]{jobName, groupName}, scheduler.getObjectName());
+      callJMXOperation(jmxInput);
+   }
+
+
+   @Override
+//   public void triggerJobWithVolatileTrigger(QuartzInstance quartzInstance, String scheduleID, String jobName, String groupName, Map jobDataMap) throws Exception
+   public void triggerJob(QuartzInstance quartzInstance, String scheduleID, String jobName, String groupName, Map jobDataMap) throws Exception
+   {
+      Scheduler scheduler = QuartzInstanceUtil.getSchedulerByInstanceId(quartzInstance, scheduleID);
+
+      // get the jobdatamap from the job, and use it in the run request
+      if (jobDataMap == null) {
+    	  jobDataMap = new HashMap();
+    	  JMXInput jmxInput = new JMXInput(quartzInstance, new String[]{String.class.getName(), String.class.getName()}, "getJobDetail", new Object[]{jobName, groupName}, scheduler.getObjectName());
+    	  Object object =  callJMXOperation(jmxInput);
+    	  CompositeDataSupport compositeDataSupport = (CompositeDataSupport) object;
+    	  TabularDataSupport tdata = (TabularDataSupport) compositeDataSupport.get("jobDataMap");
+
+          // tdata contains a hashmap, so extract the values of the map, which are CompositeDataSupport type.
+          for (Iterator it = tdata.values().iterator(); it.hasNext();)
+          {
+              Object object2 = it.next();
+              // only deal with javax.management.openmbean.CompositeDataSupport
+              if (!(object2 instanceof CompositeDataSupport)) {
+                 continue;
+              }
+              CompositeDataSupport compositeDataSupport2 = (CompositeDataSupport) object2;
+              String key = (String) compositeDataSupport2.get("key");
+              String value = (String) compositeDataSupport2.get("value");
+              log.debug("key = " + key+" value ="+value);
+              jobDataMap.put(key, value);
+          }
+      }
+      JMXInput jmxInput = new JMXInput(quartzInstance, new String[]{String.class.getName(), String.class.getName(), Map.class.getName()}, "triggerJob", new Object[]{jobName, groupName, jobDataMap}, scheduler.getObjectName());
+      log.debug("about to execute " + jmxInput.getOperation() + " for scheduleid = " + scheduleID + " job = " + jobName + " group = " + groupName);
+      callJMXOperation(jmxInput);
+   }
+
+
+
+
+
 }

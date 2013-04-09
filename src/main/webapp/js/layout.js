@@ -25,146 +25,124 @@ Ext.onReady(function()
                 id : 'jobName',
                 header : "Job",
                 width : 160,
+				css : "font-size:13px;padding:3px;;color:#333333;",
                 sortable : true,
                 dataIndex : 'jobName',
-                renderer : function(value, p, record)
-                {
-                    return '<div style="padding:2px;"><font style="font-size: 12px;color:#333333">'
-                        + Ext.util.Format.htmlEncode(record.data.jobName)
-                        + '</font></div>'
+                renderer : function(value, p, record) {
+                    return Ext.util.Format.htmlEncode(record.data.jobName);
                 }
             },
             {
                 id : 'calendarName',
                 header : "Calendar",
                 width : 160,
+				css : "font-size:13px;padding:3px;;color:#333333;",
                 sortable : true,
                 hidden : true,
                 dataIndex : 'calendarName',
-                renderer : function(value, p, record)
-                {
-                    return '<div style="padding:2px;"><font style="font-size: 12px;color:#333333">'
-                        + Ext.util.Format.htmlEncode(record.data.calendarName)
-                        + '</font></div>'
+                renderer : function(value, p, record) {
+                    return Ext.util.Format.htmlEncode(record.data.calendarName);
                 }
             },
             {
                 id : 'triggerName',
                 header : "Trigger",
                 width : 160,
+				css : "font-size:13px;padding:3px;;color:#333333;",
                 sortable : true,
                 hidden : true,
                 dataIndex : 'triggerName',
-                renderer : function(value, p, record)
-                {
-                    return '<div style="padding:2px;"><font style="font-size: 12px;color:#333333">'
-                        + Ext.util.Format.htmlEncode(record.data.triggerName)
-                        + '</font></div>'
+                renderer : function(value, p, record) {
+                    return Ext.util.Format.htmlEncode(record.data.triggerName);
                 }
             },
             {
                 id : 'triggerGroup',
                 header : "Trigger Group",
                 width : 160,
+				css : "font-size:13px;padding:3px;;color:#333333;",
                 sortable : true,
                 hidden : true,
                 dataIndex : 'triggerGroup',
-                renderer : function(value, p, record)
-                {
-                    return '<div style="padding:2px;"><font style="font-size: 12px;color:#333333">'
-                        + Ext.util.Format.htmlEncode(record.data.triggerGroup)
-                        + '</font></div>'
+                renderer : function(value, p, record) {
+                    return Ext.util.Format.htmlEncode(record.data.triggerGroup);
                 }
             },
             {
                 id : 'schedulerName',
                 header : "Scheduler",
                 width : 100,
+				css : "font-size:13px;padding:3px;;color:#333333;",
                 sortable : true,
                 dataIndex : 'schedulerName',
-                renderer : function(value, p, record)
-                {
-                    return '<div style="padding:2px;"><font style="font-size: 12px;color:#333333">'
-                        + Ext.util.Format.htmlEncode(record.data.schedulerName)
-                        + '</font></div>'
+                renderer : function(value, p, record) {
+                    return Ext.util.Format.htmlEncode(record.data.schedulerName);
                 }
             },
             {
                 id : 'scheduledFireTime',
                 header : "Scheduled",
                 width : 130,
+				css : "font-size:13px;padding:3px;;color:#333333;",
                 sortable : true,
                 dataIndex : 'scheduledFireTime',
-                renderer : function(value, p, record)
-                {
-                    return '<div style="padding:2px;"><font style="font-size: 12px;color:#333333">'
-                        + Ext.util.Format.date(record.data.scheduledFireTime,
-                        'm/d/y H:i:s') + '</font></div>'
+				css : "font-size : 13px;padding:3px;color:green;",
+                renderer : function(value, p, record) {
+                    return Ext.util.Format.date(record.data.scheduledFireTime,'m/d/y H:i:s');
                 }
             },
             {
                 id : 'fireTime',
                 header : "Fired",
                 width : 130,
+				css : "font-size:13px;padding:3px;;color:#333333;",
                 sortable : true,
                 dataIndex : 'fireTime',
-                renderer : function(value, p, record)
-                {
-                    return '<div style="padding:2px;"><font style="font-size: 12px;color:#333333">'
-                        + Ext.util.Format.date(record.data.fireTime,
-                        'm/d/y H:i:s') + '</font></div>'
+                renderer : function(value, p, record) {
+                    return Ext.util.Format.date(record.data.fireTime,'m/d/y H:i:s');
                 }
             },
             {
                 id : 'nextFireTime',
                 header : "Next Fire",
                 width : 130,
+				css : "font-size:13px;padding:3px;;color:#333333;",
                 sortable : true,
                 dataIndex : 'nextFireTime',
-                renderer : function(value, p, record)
-                {
-                    return '<div style="padding:2px;"><font style="font-weight:bold; font-size: 12px;color:#333333">'
-                        + Ext.util.Format.date(record.data.nextFireTime,
-                        'm/d/y H:i:s') + '</font></div>'
+                renderer : function(value, p, record) {
+                    return Ext.util.Format.date(record.data.nextFireTime,'m/d/y H:i:s');
                 }
             },
             {
                 id : 'previousFireTime',
                 header : "Previous Fire",
                 width : 130,
+				css : "font-size:13px;padding:3px;;color:#333333;",
                 sortable : true,
                 dataIndex : 'previousFireTime',
-                renderer : function(value, p, record)
-                {
-                    return '<div style="padding:2px;"><font style="font-size: 12px;color:#333333">'
-                        + Ext.util.Format.date(record.data.previousFireTime,
-                        'm/d/y H:i:s') + '</font></div>'
+                renderer : function(value, p, record) {
+                    return Ext.util.Format.date(record.data.previousFireTime,'m/d/y H:i:s');
                 }
             },
             {
                 id : 'jobRunTime',
                 header : "Duration",
                 width : 100,
+				css : "font-size:13px;padding:3px;;color:#333333;",
                 sortable : true,
                 dataIndex : 'jobRunTime',
-                renderer : function(value, p, record)
-                {
-                    return '<div style="padding:2px;"><font style="font-size: 12px;color:#333333">'
-                        + record.data.jobRunTime + 'ms</font></div>'
+                renderer : function(value, p, record) {
+                    return record.data.jobRunTime;  // TODO format as a human nuber
                 }
             },
             {
                 id : 'refireCount',
                 header : "Refire Count",
                 width : 50,
+				css : "font-size:13px;padding:3px;;color:#333333;",
                 hidden : true,
                 sortable : true,
-                dataIndex : 'refireCount',
-                renderer : function(value, p, record)
-                {
-                    return '<div style="padding:2px;"><font style="font-size: 12px;color:#333333">'
-                        + record.data.refireCount + '</font></div>'
-                }
+                dataIndex : 'refireCount'
             }
         ],
         autoHeight : false,
@@ -217,7 +195,7 @@ Ext.onReady(function()
             eventStore.reload();
         },
         interval : 20000
-    }
+    };
     Ext.TaskMgr.start(jobMonitor);
 
     // load Quartz Instances
@@ -257,7 +235,6 @@ Ext.onReady(function()
 
     var currentInstance;
     var jobStore;
-    var triggerStore;
     var schedStore;
     doLoadInstance = function(instance)
     {
@@ -271,14 +248,14 @@ Ext.onReady(function()
             + '<div id="sched-select" style="margin-left:-100;"></div>'
             + '</td><td style="text-align:left">'
             + '<table><tr><td><div id="infoid"></div></td>'
-            + '<td><div id="refreshid"></div></td></tr></table></td></tr></table></div>'
+            + '<td><div id="refreshid"></div></td></tr></table></td></tr></table></div>';
         jobStore = new Ext.data.JsonStore({
             url : 'ui',
             root : 'data',
             autoLoad : false,
             totalProperty : 'totalCount',
             fields : ['jobName', 'description', 'group', 'jobClass',
-                'schedulerInstanceId', 'durability',
+                'schedulerInstanceId', 'triggerStatus', 'durability',
                 'shouldRecover', 'quartzInstanceId',
                 'nextFireTime', 'numTriggers']
         });
@@ -292,14 +269,12 @@ Ext.onReady(function()
                 {
                     id : 'jobName',
                     header : "Job",
-                    width : 160,
+                    width : 100,
                     sortable : true,
                     css : 'font-size: 13px;font-weight:bold;color:#333333;',
                     dataIndex : 'jobName',
-                    renderer : function(value, p, record)
-                    {
-                        return Ext.util.Format
-                            .htmlEncode(record.data.jobName);
+                    renderer : function(value, p, record) {
+                        return Ext.util.Format.htmlEncode(record.data.jobName);
                     }
                 },
                 {
@@ -307,8 +282,15 @@ Ext.onReady(function()
                     header : "Next FireTime",
                     width : 170,
                     sortable : true,
-                    css : 'font-size: 13px;font-weight:bold;color:#333333;',
-                    dataIndex : 'nextFireTime'
+                    css : 'font-size: 13px;font-weight:bold;',
+                    dataIndex : 'nextFireTime',
+                    renderer : function(value, p, record) {
+                    	if (record.data.nextFireTime === "") {
+                    		return "";
+                    	} else {
+                    		return Ext.util.Format.date(record.data.nextFireTime,'m/d/y H:i:s');
+                    	}
+                    }
                 },
                 {
                     id : 'numTriggers',
@@ -317,14 +299,10 @@ Ext.onReady(function()
                     sortable : true,
                     css : 'font-size: 13px;font-weight:bold;color:#333333;text-align:center;',
                     dataIndex : 'numTriggers',
-                    renderer : function(value, p, record)
-                    {
-                        if (record.data.numTriggers < 1)
-                        {
+                    renderer : function(value, p, record) {
+                        if (record.data.numTriggers < 1) {
                             return '0';
-                        }
-                        else
-                        {
+                        } else {
                             return '<a ext:qtip="Click to view Job triggers." ext:qtitle="Show Triggers" href="javascript:void(0);" onClick="getTriggersForJob(\''
                                 + record.data.quartzInstanceId
                                 + '\',\''
@@ -340,66 +318,160 @@ Ext.onReady(function()
                 },
                 {
                     id : 'group',
-                    header : "Group",
+                    header : "Rep ID", // original source rep_id
                     width : 100,
                     sortable : true,
                     css : 'font-size: 13px;font-weight:bold;color:#333333;',
                     dataIndex : 'group',
-                    renderer : function(value, p, record)
-                    {
-                        return Ext.util.Format
-                            .htmlEncode(record.data.group);
+                    renderer : function(value, p, record) {
+                        return Ext.util.Format.htmlEncode(record.data.group);
                     }
                 },
                 {
+                    id : 'description',
+                    header : "Report Name--User Name--Call Center",
+                    width : 400,
+                    sortable : true,
+                    css : 'font-size: 13px;font-weight:bold;color:#333333;',
+                    dataIndex : 'description',
+                    renderer : function(value, p, record) {
+                        return Ext.util.Format.htmlEncode(record.data.description);
+                    }
+                },
+/*
+                {
                     id : 'jobClass',
                     header : "Job Class",
-                    width : 180,
+                    width : 10,
                     sortable : true,
                     css : 'font-size: 13px;font-weight:bold;color:#333333;',
                     dataIndex : 'jobClass',
-                    renderer : function(value, p, record)
-                    {
+                    renderer : function(value, p, record) {
                         return Ext.util.Format
                             .htmlEncode(record.data.jobClass);
                     }
                 },
+*/
+                {
+                    id : 'triggerStatus',
+                    header : "Status",
+                    width : 100,
+                    sortable : true,
+                    css : 'font-size: 13px;font-weight:bold;color:#333333;',
+                    dataIndex : 'triggerStatus',
+                    renderer : function(value, p, record) {
+                        return Ext.util.Format.htmlEncode(record.data.triggerStatus);
+                    }
+                },
+/*
                 {
                     id : 'durability',
                     header : "Durable",
-                    width : 80,
+                    width : 10,
                     sortable : true,
                     dataIndex : 'durability',
                     css : '',
-                    renderer : function(value, p, record)
-                    {
-                        if (record.data.durability == true)
-                        {
+                    renderer : function(value, p, record) {
+                        if (record.data.durability == true) {
                             return '<div style="text-align:center;"><img src="images/ok.png" border="0"/></div>';
                         }
                     }
                 },
+*/
+/*
                 {
                     id : 'shouldRecover',
                     header : "Recoverable",
-                    width : 80,
+                    width : 10,
                     sortable : true,
                     dataIndex : 'shouldRecover',
                     css : 'padding:3px;',
-                    renderer : function(value, p, record)
-                    {
-                        if (record.data.shouldRecover == true)
-                        {
+                    renderer : function(value, p, record) {
+                        if (record.data.shouldRecover == true) {
                             return '<div style="text-align:center;"><img src="images/ok.png" border="0"/></div>';
                         }
+                    }
+                },
+*/
+                {
+                    id : 'controlJob',
+                    header : "Control",
+                    width : 180,
+                    sortable : false,
+                    css : 'font-size: 13px;font-weight:bold;color:#333333;text-align:center;',
+                    dataIndex : 'jobName',
+                    renderer : function(value, p, record) {
+                    	var controlLinks = '';
+                    	// only show the run and pause buttons if job is runnable
+                    	if (record.data.triggerStatus === "NORMAL") {
+	                       	controlLinks = controlLinks
+	                            + '<a ext:qtip="Click to run job." ext:qtitle="Run" href="javascript:void(0);" onClick="runJob(\''
+	                            + jobStore
+	                            + '\',\''
+	                            + record.data.quartzInstanceId
+	                            + '\',\''
+	                            + record.data.schedulerInstanceId
+	                            + '\',\''
+	                            + record.data.jobName
+	                            + '\',\''
+	                            + record.data.group
+	                            + '\')">'
+	                            + 'Run' + '</a>'
+	                            + '  ';
+	                       	controlLinks = controlLinks
+                            + '<a ext:qtip="Click to pause job." ext:qtitle="Pause" href="javascript:void(0);" onClick="pauseJob(\''
+                            + jobStore
+                            + '\',\''
+                            + record.data.quartzInstanceId
+                            + '\',\''
+                            + record.data.schedulerInstanceId
+                            + '\',\''
+                            + record.data.jobName
+                            + '\',\''
+                            + record.data.group
+                            + '\')">'
+                            + 'Pause' + '</a>'
+                            + '  ';
+                    }
+                    // only show resume button if the job is paused
+ 	               	if (record.data.triggerStatus === "PAUSED" || record.data.triggerStatus === "ERROR") {
+	                    	controlLinks = controlLinks
+	                    	    + '<a ext:qtip="Click to resume job." ext:qtitle="Resume" href="javascript:void(0);" onClick="resumeJob(\''
+	                            + jobStore
+	                            + '\',\''
+	                            + record.data.quartzInstanceId
+	                            + '\',\''
+	                            + record.data.schedulerInstanceId
+	                            + '\',\''
+	                            + record.data.jobName
+	                            + '\',\''
+	                            + record.data.group
+	                            + '\')">'
+	                            + 'Resume' + '</a>'
+	                            + '  ';
+                    }
+                    	controlLinks = controlLinks
+                    	    + '<a ext:qtip="Click to delete Job." ext:qtitle="Delete" href="javascript:void(0);" onClick="deleteJob(\''
+                            + jobStore
+                            + '\',\''
+                            + record.data.quartzInstanceId
+                            + '\',\''
+                            + record.data.schedulerInstanceId
+                            + '\',\''
+                            + record.data.jobName
+                            + '\',\''
+                            + record.data.group
+                            + '\')">'
+                            + 'Delete' + '</a>';
+                    	return controlLinks;
                     }
                 }
             ],
             stripeRows : true,
             autoScroll : true,
-            autoExpandColumn : 'jobName',
             floatable : false,
             autoHeight : false,
+            autoWidth : true,
             border : false,
             layout : 'fit',
             frame : false,
@@ -599,7 +671,7 @@ Ext.onReady(function()
                         + '<tr><td class="label">ThreadPool Size:</td><td>'
                         + res.threadPoolSize
                         + '</td></tr>'
-                        + '</table></div>'
+                        + '</table></div>';
                     schedulerWin.body.update(html);
                 }
             }

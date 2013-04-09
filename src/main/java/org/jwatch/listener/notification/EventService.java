@@ -37,23 +37,19 @@ public class EventService
     private static int maxEventListSize;
     private static int maxShowEventListSize;
 
-    public static LinkedList<JobEvent> getEventList()
-    {
+    public static LinkedList<JobEvent> getEventList() {
         return eventList;
     }
 
-    public static int getMaxEventListSize()
-    {
+    public static int getMaxEventListSize() {
         return maxEventListSize;
     }
 
-    public static int getMaxShowEventListSize()
-    {
+    public static int getMaxShowEventListSize() {
         return maxShowEventListSize;
     }
 
-    public static void setMaxShowEventListSize(int maxShowEventListSize)
-    {
+    public static void setMaxShowEventListSize(int maxShowEventListSize) {
         EventService.maxShowEventListSize = maxShowEventListSize;
     }
 
@@ -64,28 +60,43 @@ public class EventService
 
     public static void addEvent(JobEvent event)
     {
-        if (eventList == null)
-        {
+        if (eventList == null) {
             eventList = new LinkedList<JobEvent>();
         }
-
-        // add event to the top of the list
-        eventList.addFirst(event);
-
-        // trim the list to size
-        resizeEventList();
+        if (!isDuplicateEvent(event)) {
+            // add event to the top of the list
+        	eventList.addFirst(event);
+        	// trim the list to size
+        	resizeEventList();
+        }
     }
 
     private static void resizeEventList()
     {
-        if (eventList.size() > maxEventListSize)
-        {
+        if (eventList.size() > maxEventListSize) {
             eventList.removeLast();
             resizeEventList();
-        }
-        else
-        {
+        } else {
             return;
         }
     }
+
+    // johnk - apparently Quartz will notify us multiple times for the same event.
+    // only check to the the second.
+	static boolean isDuplicateEvent(JobEvent event) {
+		long eventTime = event.getFireTime().getTime() / 1000L;
+		boolean sameEvent = false;
+		for (JobEvent listEvent : eventList) {
+			long listTime = listEvent.getFireTime().getTime() / 1000L;
+			if (event.getJobName().equalsIgnoreCase(listEvent.getJobName())
+					&& event.getJobGroup().equalsIgnoreCase(listEvent.getJobGroup())
+					&& eventTime == listTime) {
+				sameEvent = true;
+//				System.out.println("duplicate new event="+event.getJobName()+"/"+event.getJobGroup()+"/"+event.getFireTime());
+				break;
+			}
+		}
+		return sameEvent;
+	}
+
 }

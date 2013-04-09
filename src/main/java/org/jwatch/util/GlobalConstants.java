@@ -39,4 +39,12 @@ public class GlobalConstants
    public static final String MESSAGE_ERR_LOAD_SCHEDULER = "Error loading Scheduler!";
    public static final String MESSAGE_ERR_LOAD_TRIGGERS = "Error loading Triggers for Job";
    public static final String MESSAGE_ERR_TAIL_JOBS = "Error monitoring jobs list.";
+   public static final String MESSAGE_ERR_ACTION_UNKNOWN = "Error processing request! Unknown action.";
+
+   // johnk additions
+   public static final String MESSAGE_ERR_PAUSE_JOB = "Error pausing Job";
+   public static final String MESSAGE_ERR_RESUME_JOB = "Error resuming Job";
+   public static final String MESSAGE_ERR_DELETE_JOB = "Error deleting Job";
+   public static final String MESSAGE_ERR_RUN_JOB = "Error running Job";
+
 }

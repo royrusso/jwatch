@@ -33,4 +33,12 @@ public class ActionConstants
    public static final String LOAD_SCHEDULERINFO = "get_scheduler_info";
    public static final String LOAD_TRIGGERS_FOR_JOB = "get_job_triggers";
    public static final String MONITOR_JOBS = "monitor_jobs";
+
+   // johnk additions - add control capabilities
+   public static final String PAUSE_JOB = "pause_job";
+   public static final String RESUME_JOB = "resume_job";
+   public static final String DELETE_JOB = "delete_job";
+   public static final String RUN_JOB = "run_job";
+
+
 }

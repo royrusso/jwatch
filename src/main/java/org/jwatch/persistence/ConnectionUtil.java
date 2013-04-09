@@ -57,7 +57,7 @@ public class ConnectionUtil
         // "jdbc:hsqldb:hsql://localhost/xdb", "sa", "");
         conn = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/JWATCHDB", "SA", "");
         //conn = DriverManager.getConnection("jdbc:hsqldb:file:" + db_file_name_prefix, "sa", "");
-        log.info("JWatch Database connected.");
+        log.debug("JWatch Database connected.");
     }
 
     public void shutdown() throws SQLException
@@ -71,7 +71,7 @@ public class ConnectionUtil
         {
             hsqlServer.shutdown();
         }
-        log.info("JWatch Database shutdown.");
+        log.debug("JWatch Database shutdown.");
     }
 
     public synchronized void query(String expression) throws SQLException

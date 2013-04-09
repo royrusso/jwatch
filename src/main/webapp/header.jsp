@@ -12,6 +12,7 @@
     <script language="JavaScript" src="js/layout.js" type="text/javascript"></script>
     <script language="JavaScript" src="js/qcreate.js" type="text/javascript"></script>
     <script language="JavaScript" src="js/trigger_details.js" type="text/javascript"></script>
+    <script language="JavaScript" src="js/job_control.js" type="text/javascript"></script>
     <%--<script language="JavaScript" src="js/scheduler.js" type="text/javascript"></script>--%>
 </head>
 <body>
