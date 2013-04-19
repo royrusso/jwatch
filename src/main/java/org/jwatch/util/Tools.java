@@ -44,6 +44,9 @@ public class Tools
 
    public static String toStringFromDate(Date date, String format)
    {
+	   if (date == null) {
+	       return null;
+	   }
       try
       {
          if (StringUtils.trimToNull(format) == null)
@@ -55,7 +58,7 @@ public class Tools
       }
       catch (Exception e)
       {
-          log.error(e);
+          log.warn("Invalid date", e);
       }
       return null;
    }

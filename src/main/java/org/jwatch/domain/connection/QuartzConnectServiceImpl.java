@@ -46,40 +46,51 @@ public class QuartzConnectServiceImpl implements QuartzConnectService
     * {@inheritDoc}
     */
    @Override
-   public QuartzInstance initInstance(QuartzConfig config) throws Exception
-   {
-      // create url / add credentials map
-      Map<String, String[]> env = new HashMap<String, String[]>();
-      env.put(JMXConnector.CREDENTIALS, new String[]{config.getUserName(), config.getPassword()});
-      JMXServiceURL jmxServiceURL = QuartzConnectUtil.createQuartzInstanceConnection(config);
-      JMXConnector connector = JMXConnectorFactory.connect(jmxServiceURL, env);
-      MBeanServerConnection connection = connector.getMBeanServerConnection();
+	public QuartzInstance initInstance(QuartzConfig config) throws Exception {
+		QuartzInstance quartzInstance = null;
+		try {
+			// create url / add credentials map
+			Map<String, String[]> env = new HashMap<String, String[]>();
+			env.put(JMXConnector.CREDENTIALS,
+					new String[] { config.getUserName(), config.getPassword() });
+			JMXServiceURL jmxServiceURL = QuartzConnectUtil
+					.createQuartzInstanceConnection(config);
+			JMXConnector connector = JMXConnectorFactory.connect(jmxServiceURL,
+					env);
+			MBeanServerConnection connection = connector
+					.getMBeanServerConnection();
 
-      // test connection
-      ObjectName mBName = new ObjectName("quartz:type=QuartzScheduler,*");
-      Set<ObjectName> names = connection.queryNames(mBName, null);
-      QuartzInstance quartzInstance = new QuartzInstance(config);
-      quartzInstance.setMBeanServerConnection(connection);
-      quartzInstance.setJmxConnector(connector);
+			// test connection
+			ObjectName mBName = new ObjectName("quartz:type=QuartzScheduler,*");
+			Set<ObjectName> names = connection.queryNames(mBName, null);
+			quartzInstance = new QuartzInstance(config);
+			quartzInstance.setMBeanServerConnection(connection);
+			quartzInstance.setJmxConnector(connector);
 
-      // build scheduler list
-      List<Scheduler> schList = new ArrayList<Scheduler>();
-      for (ObjectName objectName : names)   // for each scheduler.
-      {
-         QuartzJMXAdapter jmxAdapter = QuartzJMXAdapterFactory.initQuartzJMXAdapter(objectName, connection);
-         quartzInstance.setJmxAdapter(jmxAdapter);
+			// build scheduler list
+			List<Scheduler> schList = new ArrayList<Scheduler>();
+			for (ObjectName objectName : names) // for each scheduler.
+			{
+				QuartzJMXAdapter jmxAdapter = QuartzJMXAdapterFactory
+						.initQuartzJMXAdapter(objectName, connection);
+				quartzInstance.setJmxAdapter(jmxAdapter);
 
-         Scheduler scheduler = jmxAdapter.populateScheduler(quartzInstance, objectName);
-         schList.add(scheduler);
+				Scheduler scheduler = jmxAdapter.populateScheduler(
+						quartzInstance, objectName);
+				schList.add(scheduler);
 
-         // attach listener
-         Listener listener = new Listener();
-         listener.setUUID(scheduler.getUuidInstance());
-         connection.addNotificationListener(objectName, listener, null, null);
-         log.info("added listener " + objectName.getCanonicalName());
-         QuartzInstance.putListener(listener);
-      }
-      quartzInstance.setSchedulerList(schList);
-      return quartzInstance;
-   }
+				// attach listener
+				Listener listener = new Listener();
+				listener.setUUID(scheduler.getUuidInstance());
+				connection.addNotificationListener(objectName, listener, null,
+						null);
+				log.debug("added listener " + objectName.getCanonicalName());
+				QuartzInstance.putListener(listener);
+			}
+			quartzInstance.setSchedulerList(schList);
+		} catch (Exception e) {
+			log.warn("Cannot connect to server using configuration  " + config.getUuid());
+		}
+		return quartzInstance;
+	}
 }
